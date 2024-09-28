@@ -35,3 +35,5 @@ if input_text:
     st.write(chain.invoke({"question":input_text}))
 
 
+# to run cd {location}
+# streamlit run genai_app_ollama.py
