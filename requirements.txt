@@ -5,3 +5,5 @@ pypdf
 bs4
 langchain-text-splitters
 lxml
+langchain-openai
+chromadb
