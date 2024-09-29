@@ -10,3 +10,4 @@ chromadb
 sentence_transformers
 langchain-huggingface
 streamlit
+langchain_qroq
