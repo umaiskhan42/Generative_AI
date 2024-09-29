@@ -12,3 +12,6 @@ langchain-huggingface
 streamlit
 langchain_qroq
 langchain_core
+fastapi
+uvicorn
+langserve
