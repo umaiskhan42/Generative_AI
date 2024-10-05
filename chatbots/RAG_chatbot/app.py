@@ -8,6 +8,9 @@ from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.runnables.history import RunnableWithMessageHistory
 import os
 import streamlit as st
 import os
@@ -48,7 +51,7 @@ if api_key:
                 documents.extend(docs)
 
         #split and create embeddings
-        text_splitter=RecursiveCharachterTextSplitter(chunk_size=5000,chunk_overlap=500)
+        text_splitter=RecursiveCharacterTextSplitter(chunk_size=5000,chunk_overlap=500)
         splits=text_splitter.split_documents(documents)
         vectorstore=Chroma.from_documents(documents=splits,embedding=embeddings)
         retriever=vectorstore.as_retriever()
