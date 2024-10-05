@@ -1,10 +1,3 @@
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_community.llms import ollama
-from langchain.chains import create_history_aware_retriever, create_retrievel_chain
-from langchain_chroma import Chroma 
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_groq import ChatGroq
 ## RAG Q&A Conversation With PDF Including Chat History
 import streamlit as st
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
@@ -101,4 +94,28 @@ if api_key:
         question_answer_chain=create_stuff_documents_chain(llm,qa_prompt)
         rag_chain=create_retrieval_chain(history_aware_retriever,question_answer_chain)
 
+        def get_session_history (session: str)->BaseChatMessageHistory:
+            if session_id not in st.session_state.store:
+                st.session_state.store[session_id] =ChatMessageHistory()
+            return st.session_state.store[session_id]
         
+        conversational_rag_chain=RunnableWithMessageHistory(
+            rag_chain, get_session_history,
+            input messages_key="input",
+            history_messages_key="chathistory",
+            output messages_key="answer"
+        )
+        user_input = st.text_input("Your question: ")
+        if user_input:
+            session_history=get_session_history(session_id)
+            response = conversational_rag_chain.invoke(
+            {"input": user_input},
+            config={
+            "configurable": {"session_id": session_id}
+            }, # constructs a key "abc123" in `store.
+            )
+            st.write(st.session_state.store)
+            st.success("Assistant:", response['answer'])
+            st.write("Chat History:", session_history.messages)
+else:
+    st.warning("Enter your API Key")
