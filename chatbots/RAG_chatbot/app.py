@@ -20,7 +20,7 @@ load_dotenv()
 #langsmith tracking
 
 os.environ["HF_TOKEN"]=os.getenv("HF_TOKEN")
-embeddings=HuggingFaceEmbeddings(model_name="all-MiniLLM-L6-v2")
+embeddings=HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 st.title("Chatbot with RAG")
 
@@ -104,10 +104,10 @@ if api_key:
         
         conversational_rag_chain=RunnableWithMessageHistory(
             rag_chain, get_session_history,
-            input messages_key="input",
-            history_messages_key="chathistory",
-            output messages_key="answer"
-        )
+            input_messages_key="input",
+            history_messages_key="chat_history",
+            output_messages_key="answer",
+            )
         user_input = st.text_input("Your question: ")
         if user_input:
             session_history=get_session_history(session_id)
@@ -118,7 +118,7 @@ if api_key:
             }, # constructs a key "abc123" in `store.
             )
             st.write(st.session_state.store)
-            st.success("Assistant:", response['answer'])
+            st.write("Assistant:", response['answer'])
             st.write("Chat History:", session_history.messages)
 else:
     st.warning("Enter your API Key")
